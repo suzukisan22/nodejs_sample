@@ -1,46 +1,53 @@
-var querystring = require("querystring");
+var querystring = require('querystring'),
+    fs = require('fs'),
+    ejs = require('ejs');
+var posts = [];
 
-function start(response, postData) {
-  console.log("Request handler 'start' was called.");
+var template = "";
 
-  var body = '<html>'+
-    '<head>'+
-    '<meta http-equiv="Content-Type" content="text/html; '+
-    'charset=UTF-8" />'+
-    '</head>'+
-    '<body>'+
-    '<form action="/upload" method="post">'+
-    '<textarea name="text" rows="20" cols="60"></textarea>'+
-    '<textarea name="text2" rows="20" cols="60"></textarea>'+
-    '<input type="submit" value="Submit text" />'+
-    '</form>'+
-    '</body>'+
-    '</html>';
-
-    response.writeHead(200, {"Content-Type": "text/html"});
-    response.write(body);
-    response.end();
+function setTemplate(fileName) {
+  template = fs.readFileSync(__dirname + fileName, "utf-8");
 }
 
-function upload(response, postData) {
-  console.log("Request handler 'upload' was called.");
-  response.writeHead(200, {"Content-Type": "text/html"});  
-  var body = '<html>'+
-    '<head>'+
-    '<meta http-equiv="Content-Type" content="text/html; '+
-    'charset=UTF-8" />'+
-    '</head>'+
-    '<body>'+
-    '<p>text: ' + querystring.parse(postData).text + '</p>' +
-    '<p>text2: ' + querystring.parse(postData).text2 + '</p>' +
-    '<input type="submit" value="Submit text" />'+
-    '</body>'+
-    '</html>';
-
-  console.log(querystring.parse(postData));
-  response.write(body);
+function renderForm(posts, response) {
+  var data = ejs.render(template, {
+    posts: posts
+  });
+  response.writeHead(200, {"Content-Type": "text/html"});
+  response.write(data);
   response.end();
 }
 
+function start(response, request) {
+  console.log("Request handler 'start' was called.");
+
+
+  setTemplate("/index.ejs");
+  renderForm(posts, response);
+}
+
+function confirm(response, request) {
+  setTemplate("/confirm.ejs");
+
+  console.log("Request handler 'confirm' was called.");
+  if(request.method === "POST") {
+    request.data = "";
+    request.on("data", function(chunk){
+      request.data += chunk;
+      console.log(request.data);
+    });
+    request.on("end", function(){
+      var query = querystring.parse(request.data);
+      var posts = {
+        title: query.title,
+        content: query.content
+      };
+      renderForm(posts, response);
+    });
+  } else {
+    response.location("/start");
+  }
+}
+
 exports.start = start;
-exports.upload = upload;
+exports.confirm = confirm;

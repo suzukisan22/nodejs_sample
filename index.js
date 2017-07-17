@@ -1,7 +1,6 @@
 var server = require("./server");
 var router = require("./router");
 var requestHandlers = require("./requestHandlers");
-var connection = require("./mysqlConnection");
 
 
 /* パスに対して呼び出すメソッドを定義
@@ -10,7 +9,7 @@ var connection = require("./mysqlConnection");
 var handle = []
 handle["/"] = requestHandlers.start;
 handle["/start"] = requestHandlers.start;
-handle["/upload"] = requestHandlers.upload;
+handle["/confirm"] = requestHandlers.confirm;
 handle["/commit"] = requestHandlers.commit;
 
 
