@@ -5,10 +5,19 @@ var posts = [];
 
 var template = "";
 
+// 表示させるテンプレートを設定
 function setTemplate(fileName) {
   template = fs.readFileSync(__dirname + fileName, "utf-8");
 }
 
+// 遷移先を設定。
+function movePermanently(response, fileName){
+  response.writeHead(301, {"Location": "http://localhost:8888/" + fileName});
+  response.end();
+}
+
+
+// postデータを設定
 function renderForm(posts, response) {
   var data = ejs.render(template, {
     posts: posts
@@ -18,14 +27,17 @@ function renderForm(posts, response) {
   response.end();
 }
 
+// startアクション
 function start(response, request) {
   console.log("Request handler 'start' was called.");
 
-
   setTemplate("/index.ejs");
-  renderForm(posts, response);
+  response.writeHead(200, {"Content-Type": "text/html"});
+  response.write(template);
+  response.end();
 }
 
+// confirmアクション
 function confirm(response, request) {
   setTemplate("/confirm.ejs");
 
@@ -45,8 +57,8 @@ function confirm(response, request) {
       renderForm(posts, response);
     });
   } else {
-    response.writeHead(301, {"Location": "http://localhost:8888/start"});
-    response.end();
+    // GETアクションの場合はstartに遷移させる。
+    movePermanently(response, "start");
   }
 }
 
