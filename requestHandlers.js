@@ -45,7 +45,8 @@ function confirm(response, request) {
       renderForm(posts, response);
     });
   } else {
-    response.location("/start");
+    response.writeHead(301, {"Location": "http://localhost:8888/start"});
+    response.end();
   }
 }
 
