@@ -7,6 +7,15 @@
 <ul>
 	<li><%= posts.title %></li>
 	<li><%= posts.content %></li>
-</ul>
+	<form action="/start" method="post">
+		<input type="hidden" name="title" value="<%= posts.title %>">
+		<input type="hidden" name="content" value="<%= posts.content %>">
+		<input type="submit" value="戻る">
+	</form>
+	<form action="/commit" method="post">
+		<input type="hidden" name="title" value="<%= posts.title %>">
+		<input type="hidden" name="content" value="<%= posts.content %>">
+		<input type="submit" value="送信">
+	</form>
 </body>
 </html>

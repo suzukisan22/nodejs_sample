@@ -5,8 +5,8 @@
 <body>
 <form method="post" action="/confirm">
 <!-- <input type="text" name="title" multiple="multiple"><br><br> -->
-<input type="text" name="title"><br><br>
-<textarea name="content"></textarea><br><br>
+<input type="text" name="title" value="<%= posts.title %>"><br><br>
+<textarea name="content"><%= posts.content %></textarea><br><br>
 <input type="submit" value="POST!" />
 </form>
 </body>

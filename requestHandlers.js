@@ -32,9 +32,23 @@ function start(response, request) {
   console.log("Request handler 'start' was called.");
 
   setTemplate("/index.ejs");
-  response.writeHead(200, {"Content-Type": "text/html"});
-  response.write(template);
-  response.end();
+  if(request.method === "POST") {
+    request.data = "";
+    request.on("data", function(chunk){
+      request.data += chunk;
+      console.log(request.data);
+    });
+    request.on("end", function(){
+      var query = querystring.parse(request.data);
+      var posts = {
+        title: query.title,
+        content: query.content
+      };
+      renderForm(posts, response);
+    });
+  } else {
+    renderForm(posts, response);
+  }
 }
 
 // confirmアクション
@@ -60,6 +74,10 @@ function confirm(response, request) {
     // GETアクションの場合はstartに遷移させる。
     movePermanently(response, "start");
   }
+}
+
+function commmit(response, request) {
+  setTemplate("/commit.ejs");
 }
 
 exports.start = start;
