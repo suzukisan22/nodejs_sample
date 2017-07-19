@@ -4,18 +4,32 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
 <body>
-<form method="post" action="/confirm">
+<p id="alert"></p>
+<form method="post" action="/confirm" id="new">
 <!-- <input type="text" name="title" multiple="multiple"><br><br> -->
 <input type="text" name="title" value="<%= posts.title %>"><br><br>
 <textarea name="content"><%= posts.content %></textarea><br><br>
-<input type="submit" value="POST!" />
+<button type="button" id="btn_id">POST!</button>
 <input type="button" value="clear" />
 </form>
 </body>
 <script type="text/javascript">
-	$('input[value="clear"]').on('click', function(){
-		$('input[name="title"]').val('');
-		$('textarea[name="content"]').val('');
-	});
+// クリアボタン
+$('input[value="clear"]').on('click', function(){
+	$('input[name="title"]').val('');
+	$('textarea[name="content"]').val('');
+});
+
+// バリデーション
+$("#btn_id").on('click', function(){
+	var title = $('input[name="title"]').val();
+	var content = $('textarea[name="content"]').val();
+	if(title == "" || content == "") {
+		$("#alert").text("必須項目です。");
+		return false;
+	} else {
+		$("#new").submit();
+	}
+});
 </script>
 </html>

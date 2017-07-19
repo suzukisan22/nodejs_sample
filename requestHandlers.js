@@ -17,7 +17,6 @@ function movePermanently(response, fileName){
   response.end();
 }
 
-
 // postデータを設定
 function renderForm(posts, response) {
   var data = ejs.render(template, {
@@ -65,6 +64,7 @@ function confirm(response, request) {
     });
     request.on("end", function(){
       var query = querystring.parse(request.data);
+      console.log("title: " + query.title);
       var posts = {
         title: query.title,
         content: query.content
@@ -91,7 +91,7 @@ function commit(response, request) {
         title: query.title,
         content: query.content
       };
-      
+      renderForm(posts, response);
     });
   } else {
     // GETアクションの場合はstartに遷移させる。
