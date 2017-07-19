@@ -1,6 +1,7 @@
 <!Doctype html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
 <body>
 <form method="post" action="/confirm">
@@ -8,6 +9,13 @@
 <input type="text" name="title" value="<%= posts.title %>"><br><br>
 <textarea name="content"><%= posts.content %></textarea><br><br>
 <input type="submit" value="POST!" />
+<input type="button" value="clear" />
 </form>
 </body>
+<script type="text/javascript">
+	$('input[value="clear"]').on('click', function(){
+		$('input[name="title"]').val('');
+		$('textarea[name="content"]').val('');
+	});
+</script>
 </html>

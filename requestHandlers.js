@@ -13,6 +13,7 @@ function setTemplate(fileName) {
 // 遷移先を設定。
 function movePermanently(response, fileName){
   response.writeHead(301, {"Location": "http://localhost:8888/" + fileName});
+  response.write("はじめからやり直してください。");
   response.end();
 }
 
@@ -76,9 +77,28 @@ function confirm(response, request) {
   }
 }
 
-function commmit(response, request) {
+function commit(response, request) {
   setTemplate("/commit.ejs");
+  if(request.method === "POST") {
+    request.data = "";
+    request.on("data", function(chunk){
+      request.data += chunk;
+      console.log(request.data);
+    });
+    request.on("end", function(){
+      var query = querystring.parse(request.data);
+      var posts = {
+        title: query.title,
+        content: query.content
+      };
+      
+    });
+  } else {
+    // GETアクションの場合はstartに遷移させる。
+    movePermanently(response, "start");
+  }
 }
 
 exports.start = start;
 exports.confirm = confirm;
+exports.commit = commit;
